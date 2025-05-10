@@ -1,6 +1,9 @@
 import GuideCarousel from "../components/GuideCarousel";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+
   return (
     <main
       className="min-h-screen flex flex-col items-center justify-center
@@ -19,7 +22,7 @@ export default function LoginPage() {
         className="mt-10 flex items-center gap-3 bg-emerald-500 hover:bg-emerald-600
                    active:scale-95 transition-transform duration-150
                    text-black font-semibold py-3 px-6 rounded-full"
-        onClick={() => console.log("TODO: Spotify login")}
+        onClick={() => navigate("/cards")}
       >
         <img
           src="/spotify_primary_logo_rgb_black.png"

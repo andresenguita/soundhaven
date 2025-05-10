@@ -8,4 +8,7 @@
 @layer utilities {
   .slide-enter { @apply opacity-0 translate-x-10; }
   .slide-enter-active { @apply transition-all duration-300 opacity-100 translate-x-0; }
+  .perspective { perspective: 1000px; }
+  .backface-hidden { backface-visibility: hidden; }
+  .rotate-y-180 { transform: rotateY(180deg); }
 }
