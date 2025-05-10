@@ -22,7 +22,7 @@ export default function LoginPage() {
         onClick={() => console.log("TODO: Spotify login")}
       >
         <img
-          src="/public/Spotify_Primary_Logo_RGB_Black.png"
+          src="/spotify_primary_logo_rgb_black.png"
           alt="Spotify logo"
           className="w-5 h-5"
         />
