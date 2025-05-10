@@ -1,7 +1,8 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
+import type { ReactNode } from "react";
 
 /**
- * Carta 3D tamaño fijo 320 × 480 px (25 % mayor que antes).
+ * Carta 3D tamaño fijo 320 × 480 px
  */
 interface Card3DProps {
   front: ReactNode;
@@ -23,12 +24,12 @@ export default function Card3D({ front, back, className = "" }: Card3DProps) {
         }`}
         style={{ transformStyle: "preserve-3d" }}
       >
-        {/* Cara A */}
+        {/* Front */}
         <div className="absolute inset-0 backface-hidden rounded-md overflow-hidden shadow-md">
           {front}
         </div>
 
-        {/* Cara B */}
+        {/* Back */}
         <div className="absolute inset-0 rotate-y-180 backface-hidden rounded-md overflow-hidden shadow-md">
           {back}
         </div>
