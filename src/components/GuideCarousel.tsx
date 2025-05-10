@@ -22,7 +22,7 @@ export default function GuideCarousel() {
                         px-10 py-8 rounded-2xl"
     >
       <h2 className="text-lg font-semibold text-emerald-300">
-        How does it work?
+        HOW DOES IT WORK?
       </h2>
 
       {/* imagen + flechas */}
