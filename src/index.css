@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+
+@layer base {
+  body {
+    @apply m-0 text-white bg-gradient-to-br from-zinc-900 via-zinc-900 to-black;
+  }
+}
+
+
+@layer utilities {
+  .slide-enter { @apply opacity-0 translate-x-10; }
+  .slide-enter-active { @apply transition-all duration-300 opacity-100 translate-x-0; }
+}
