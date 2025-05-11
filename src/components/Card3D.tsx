@@ -1,23 +1,37 @@
-import { useState } from "react";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
+import { motion } from "framer-motion";
 
-interface Props {
+interface Card3DProps {
+  id: string;
   front: ReactNode;
   back: ReactNode;
+  isFlipped: boolean;
+  onSelect: () => void;
 }
 
-export default function Card3D({ front, back }: Props) {
-  const [flip, setFlip] = useState(false);
+const layoutTransition = { type: "spring", stiffness: 500, damping: 30 };
 
+export default function Card3D({
+  id,
+  front,
+  back,
+  isFlipped,
+  onSelect,
+}: Card3DProps) {
   return (
-    <div
-      className="relative w-80 h-120 perspective cursor-pointer"
-      onClick={() => setFlip(!flip)}
+    <motion.div
+      layoutId={id}
+      className={`relative w-80 h-120 perspective cursor-pointer ${
+        isFlipped ? "invisible" : ""
+      }`}
+      onClick={onSelect}
+      transition={layoutTransition}
     >
-      <div
-        className={`relative w-full h-full transition-transform duration-500 ${
-          flip ? "rotate-y-180" : ""
-        }`}
+      <motion.div
+        // Reveal animation: slower duration for suspense
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
+        className="relative w-full h-full"
         style={{ transformStyle: "preserve-3d" }}
       >
         {/* FRONT */}
@@ -29,7 +43,7 @@ export default function Card3D({ front, back }: Props) {
         <div className="absolute inset-0 rotate-y-180 backface-hidden rounded-md overflow-hidden shadow-lg">
           {back}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
