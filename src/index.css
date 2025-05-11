@@ -1,14 +1,16 @@
 @import "tailwindcss";
 
+/* ---------- Base ---------- */
 @layer base {
   body {
+    /* Modo oscuro permanente */
     @apply m-0 text-white bg-gradient-to-br from-zinc-900 via-zinc-900 to-black;
   }
 }
+
+/* ---------- Utilidades personalizadas ---------- */
 @layer utilities {
-  .slide-enter { @apply opacity-0 translate-x-10; }
-  .slide-enter-active { @apply transition-all duration-300 opacity-100 translate-x-0; }
-  .perspective { perspective: 1000px; }
+  .perspective     { perspective: 1000px; }
   .backface-hidden { backface-visibility: hidden; }
-  .rotate-y-180 { transform: rotateY(180deg); }
+  .rotate-y-180    { transform: rotateY(180deg); }
 }

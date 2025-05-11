@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-/* 6 pasos: sustituye captions e imágenes por las definitivas */
+/* 6 pasos de la guía */
 const slides = [
   { img: "/guide/step1.png", caption: "Flip one of the three daily cards" },
   { img: "/guide/step2.png", caption: "Listen to the track it reveals" },
@@ -21,18 +21,17 @@ export default function GuideCarousel() {
                         bg-zinc-800/30 border border-zinc-700/60
                         px-10 py-8 rounded-2xl"
     >
-      <h2 className="text-lg font-semibold text-emerald-300">
-        HOW DOES IT WORK?
-      </h2>
+      <h2 className="text-lg font-semibold text-zinc-200">HOW DOES IT WORK?</h2>
 
       {/* imagen + flechas */}
       <div className="relative flex items-center">
         <Arrow dir="prev" onClick={() => go(-1)} />
 
+        {/* ⬆️ ancho +10 %: 31 rem / 37 rem */}
         <img
           src={slides[idx].img}
           alt=""
-          className="w-[28rem] lg:w-[34rem] aspect-video rounded-md shadow-md object-cover"
+          className="w-[34rem] lg:w-[40rem] aspect-video rounded-md shadow-md object-cover"
         />
 
         <Arrow dir="next" onClick={() => go(1)} />
@@ -40,7 +39,7 @@ export default function GuideCarousel() {
 
       <p className="text-center text-sm md:text-base">{slides[idx].caption}</p>
 
-      {/* dots — ahora 6 */}
+      {/* dots */}
       <div className="flex gap-3">
         {slides.map((_, i) => (
           <button
