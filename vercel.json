@@ -1,12 +1,19 @@
 {
-  "name": "soundhaven-monorepo",
-  "private": true,
-  "scripts": {
-    "dev": "concurrently \"npm:server\" \"npm:client\"",
-    "server": "npm --prefix server run dev",
-    "client": "npm --prefix client run dev"
-  },
-  "devDependencies": {
-    "concurrently": "^8.0.0"
-  }
+  "version": 2,
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "workDirectory": "client",      
+        "installCommand": "npm install",
+        "buildCommand": "npm run build",
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "client/dist/$1" }
+  ]
 }
