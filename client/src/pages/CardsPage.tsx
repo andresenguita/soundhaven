@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { LayoutGroup } from "framer-motion";
 import Card3D from "../components/Card3D";
@@ -7,7 +6,6 @@ import CardBack from "../components/CardBack";
 import { useCountdown } from "../hooks/useCountdown";
 import { useSpotify } from "../context/SpotifyContext";
 
-// Esta interfaz refleja lo que devuelve /api/cards
 interface CardData {
   img: string;
   title: string;
@@ -15,22 +13,20 @@ interface CardData {
   uri: string;
 }
 
+const API_URL = import.meta.env.VITE_API_URL ?? ""; // ← NUEVO
+
 export default function CardsPage() {
-  const navigate = useNavigate();
   const { logout, token } = useSpotify();
   const time = useCountdown();
   const [cards, setCards] = useState<CardData[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
 
-  // Al montar, pedimos las cartas al backend
   useEffect(() => {
-    fetch("http://localhost:4000/api/cards", {
+    if (!token) return;
+
+    fetch(`${API_URL}/api/cards`, {
       credentials: "include",
-      headers: {
-        // No es estrictamente necesario para /cards,
-        // pero si las cartas requieren datos de usuario puedes usar:
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
       .then((data: CardData[]) => setCards(data))
@@ -39,7 +35,7 @@ export default function CardsPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-zinc-900 via-zinc-900 to-black text-white flex flex-col">
-      {/* Header con Logout */}
+      {/* Header */}
       <header className="relative flex items-start justify-between p-8">
         <button
           onClick={logout}
@@ -54,7 +50,7 @@ export default function CardsPage() {
       </header>
 
       <LayoutGroup>
-        {/* Muestra las cartas en 3D */}
+        {/* Cartas */}
         <section className="flex-grow flex justify-center items-center">
           <div className="flex gap-14">
             {cards.map((c, i) => (

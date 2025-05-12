@@ -8,7 +8,7 @@ interface Card3DProps {
   back: ReactNode;
   isFlipped: boolean;
   onSelect: () => void;
-} //TEST
+}
 
 const layoutTransition = { type: "spring", stiffness: 500, damping: 30 };
 
@@ -22,7 +22,9 @@ export default function Card3D({
   return (
     <motion.div
       layoutId={id}
-      className={`relative w-80 h-120 perspective cursor-pointer ${
+      /* w-72 ≈ 18 rem; cambia si quieres más grande o pequeño
+         aspect-[2/3] asegura alto = ancho × 1.5  */
+      className={`relative w-72 aspect-[2/3] perspective cursor-pointer ${
         isFlipped ? "invisible" : ""
       }`}
       onClick={onSelect}

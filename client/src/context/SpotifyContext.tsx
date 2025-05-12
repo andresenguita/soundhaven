@@ -13,6 +13,8 @@ const SpotifyContext = createContext<SpotifyContextValue>({
   initialized: false,
 });
 
+const API_URL = import.meta.env.VITE_API_URL ?? ""; // ← NUEVO
+
 export function SpotifyProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
@@ -28,26 +30,20 @@ export function SpotifyProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    fetch("/api/auth/refresh", {
+    fetch(`${API_URL}/api/auth/refresh`, {
       credentials: "include",
     })
       .then((res) => {
         if (!res.ok) throw new Error("No autenticado");
         return res.json();
       })
-      .then((data: { access_token: string }) => {
-        setToken(data.access_token);
-      })
-      .catch(() => {
-        setToken(null);
-      })
-      .finally(() => {
-        setInitialized(true);
-      });
+      .then((data: { access_token: string }) => setToken(data.access_token))
+      .catch(() => setToken(null))
+      .finally(() => setInitialized(true));
   }, []);
 
   const logout = () => {
-    fetch("/api/auth/logout", {
+    fetch(`${API_URL}/api/auth/logout`, {
       method: "POST",
       credentials: "include",
     }).then(() => {

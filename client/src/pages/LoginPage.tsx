@@ -1,10 +1,10 @@
 import GuideCarousel from "../components/GuideCarousel";
 
-// Pantalla inicial de login
+const API_URL = import.meta.env.VITE_API_URL ?? ""; // ← NUEVO
+
 export default function LoginPage() {
-  // Redirige a tu backend, que a su vez redirige a Spotify
   const handleLogin = () => {
-    window.location.href = "http://localhost:4000/api/auth/login";
+    window.location.href = `${API_URL}/api/auth/login`;
   };
 
   return (
