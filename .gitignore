@@ -4,3 +4,5 @@ echo ".vercel" >> .gitignore      # para que no vuelva a colarse
 git add .gitignore
 git commit -m "chore: remove .vercel dir from repo"
 git push origin main
+
+.vercel
