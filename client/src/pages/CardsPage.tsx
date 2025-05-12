@@ -103,7 +103,7 @@ export default function CardsPage() {
       </LayoutGroup>
 
       {/* Countdown */}
-      <footer className="py-8 text-center text-zinc-400 text-2xl">
+      <footer className="py-8 text-center text-zinc-400 text-xl">
         Our next sound voyage in: <span className="font-medium">{time}</span>
       </footer>
     </main>
