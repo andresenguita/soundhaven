@@ -1,60 +1,98 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
-import type { ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  type ReactNode,
+} from "react";
 
 interface SpotifyContextValue {
+  /** OAuth access token (JWT) */
   token: string | null;
-  logout: () => void;
+  /** Logout → clears cookie + token and redirects home */
+  logout: () => Promise<void>;
+  /** True once we tried exchanging / refreshing tokens */
   initialized: boolean;
 }
 
 const SpotifyContext = createContext<SpotifyContextValue>({
   token: null,
-  logout: () => {},
+  logout: async () => {},
   initialized: false,
 });
 
+interface RefreshResponse {
+  access_token: string;
+  expires_in: number;
+}
+
+// Prefer env var; fall back to relative path when running behind Vite proxy
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
+
 export function SpotifyProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(null);
+  /**
+   * Keep the token in sessionStorage to survive soft reloads (F5) while
+   * still clearing it when the tab/window closes, matching Spotify player.
+   */
+  const [token, setToken] = useState<string | null>(() => {
+    return sessionStorage.getItem("sh_token");
+  });
   const [initialized, setInitialized] = useState(false);
 
+  // Persist token in sessionStorage whenever it changes
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const urlToken = params.get("access_token");
-
-    if (urlToken) {
-      setToken(urlToken);
-      window.history.replaceState({}, "", "/cards");
-      setInitialized(true);
-      return;
+    if (token) {
+      sessionStorage.setItem("sh_token", token);
+    } else {
+      sessionStorage.removeItem("sh_token");
     }
+  }, [token]);
 
-    fetch("/api/auth/refresh", {
-      credentials: "include",
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("No autenticado");
-        return res.json();
-      })
-      .then((data: { access_token: string }) => {
-        setToken(data.access_token);
-      })
-      .catch(() => {
-        setToken(null);
-      })
-      .finally(() => {
+  /** Bootstrap: ① access_token in URL ② cookie-based /auth/refresh */
+  useEffect(() => {
+    (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const urlToken = params.get("access_token");
+
+      if (urlToken) {
+        setToken(urlToken);
+        // Clean up querystring so we don’t leak the token in browser history
+        window.history.replaceState({}, "", "/cards");
         setInitialized(true);
-      });
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/refresh`, {
+          credentials: "include",
+        });
+
+        if (!res.ok) throw new Error("Not authenticated");
+
+        const data: RefreshResponse = await res.json();
+        setToken(data.access_token);
+      } catch {
+        setToken(null);
+      } finally {
+        setInitialized(true);
+      }
+    })();
   }, []);
 
-  const logout = () => {
-    fetch("/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    }).then(() => {
+  /** Logs out both client & server and navigates to landing page */
+  const logout = useCallback(async () => {
+    try {
+      await fetch(`${API_BASE}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } finally {
       setToken(null);
+      sessionStorage.removeItem("sh_token");
       window.location.href = "/";
-    });
-  };
+    }
+  }, []);
 
   return (
     <SpotifyContext.Provider value={{ token, logout, initialized }}>
