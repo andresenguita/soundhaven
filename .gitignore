@@ -1,6 +1,6 @@
-
-/node_modules
-/.env
-.env.local
-
-.vercel
+# Desde la raíz del repo local
+git rm -r --cached .vercel        # lo elimina sólo del repo, no de tu disco
+echo ".vercel" >> .gitignore      # para que no vuelva a colarse
+git add .gitignore
+git commit -m "chore: remove .vercel dir from repo"
+git push origin main
