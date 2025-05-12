@@ -1,24 +1,22 @@
-// client/vite.config.ts
+// vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
+import tailwindcss from '@tailwindcss/vite';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    // El plugin @tailwindcss/vite se elimina para evitar problemas con ESM-only.
+    tailwindcss(),
   ],
   server: {
     port: 5174,
     proxy: {
+      // Redirige cualquier /api/* a tu backend en el puerto 4000
       '/api': {
         target: 'http://localhost:4000',
         changeOrigin: true,
         secure: false,
       },
     },
-  },
-  build: {
-    sourcemap: false,
   },
 });
