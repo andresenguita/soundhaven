@@ -1,26 +1,25 @@
-// client/vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
+// @ts-ignore: plugin is ESM-only
+import tailwindcss from '@tailwindcss/vite';
 
-// https://vitejs.dev/config/
-export default defineConfig(async () => {
-  // Cargamos dinámicamente el plugin ESM-only de Tailwind
-  const tailwindcss = (await import('@tailwindcss/vite')).default;
-
-  return {
-    plugins: [
-      react(),
-      tailwindcss(),
-    ],
-    server: {
-      port: 5174,
-      proxy: {
-        '/api': {
-          target: 'http://localhost:4000',
-          changeOrigin: true,
-          secure: false,
-        },
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+  server: {
+    port: 5174,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+        secure: false,
       },
     },
-  };
+  },
+  build: {
+    // Deshabilitamos la generación de sourcemaps para evitar errores en plugins
+    sourcemap: false,
+  },
 });
